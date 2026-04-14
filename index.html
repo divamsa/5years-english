@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ビジネス英語 シンプル変換トレーニング</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- APIキー設定モーダル -->
+  <div id="api-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h2>🔑 Gemini APIキーを入力</h2>
+      <p>このアプリはAI添削にGemini APIを使います。<br>APIキーはあなたのブラウザ内にのみ保存されます。</p>
+      <input type="password" id="api-key-input" placeholder="AIzaSy...">
+      <p class="api-help">
+        APIキーは <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a> で無料取得できます。
+      </p>
+      <button id="api-save-btn">保存してはじめる</button>
+    </div>
+  </div>
+
+  <!-- ヘッダー -->
+  <header>
+    <div class="header-inner">
+      <div class="header-title">
+        <span class="logo">🧠</span>
+        <div>
+          <h1>ビジネス英語 シンプル変換</h1>
+          <p>難しい日本語 → 5歳児レベルに → 英語へ</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <select id="level-select">
+          <option value="toeic300">TOEIC 300</option>
+          <option value="toeic500">TOEIC 500</option>
+          <option value="toeic700">TOEIC 700</option>
+          <option value="toeic900">TOEIC 900</option>
+        </select>
+        <button id="api-change-btn" title="APIキーを変更">🔑</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main>
+
+    <!-- 進捗バー -->
+    <div class="progress-container">
+      <div class="progress-info">
+        <span id="progress-text">1 / 20</span>
+        <span id="progress-percent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- 問題カード -->
+    <div class="card" id="question-card">
+      <div class="card-label">📋 ビジネス日本語</div>
+      <div class="business-text" id="business-text">読み込み中...</div>
+    </div>
+
+    <!-- ステップ説明 -->
+    <div class="steps-guide">
+      <div class="step active" id="step1-guide">
+        <span class="step-num">Step 1</span>
+        <span>上の文を5歳児でもわかる言葉に言い換えよう</span>
+      </div>
+      <div class="step" id="step2-guide">
+        <span class="step-num">Step 2</span>
+        <span>その簡単な言葉を英語にしよう</span>
+      </div>
+    </div>
+
+    <!-- 入力エリア -->
+    <div class="input-section">
+
+      <div class="input-group" id="input-group-d">
+        <label for="input-d">
+          <span class="input-icon">👶</span>
+          Step 1：5歳児の日本語
+        </label>
+        <textarea
+          id="input-d"
+          placeholder="例：お互いが『いいね』って思えるアイデアを出してもいい？"
+          rows="2"
+        ></textarea>
+      </div>
+
+      <div class="input-group" id="input-group-e">
+        <label for="input-e">
+          <span class="input-icon">🇬🇧</span>
+          Step 2：英語に訳す
+        </label>
+        <textarea
+          id="input-e"
+          placeholder="例：Can I give you an idea we both like?"
+          rows="2"
+        ></textarea>
+      </div>
+
+      <button id="submit-btn" disabled>
+        AIに添削してもらう →
+      </button>
+
+    </div>
+
+    <!-- AI結果エリア -->
+    <div class="result-section" id="result-section" style="display:none;">
+
+      <div class="result-loading" id="result-loading">
+        <div class="spinner"></div>
+        <p>Geminiが添削中...</p>
+      </div>
+
+      <div class="result-content" id="result-content" style="display:none;">
+
+        <div class="result-card model-answer">
+          <div class="result-card-title">💡 AI模範解答</div>
+          <div class="result-row">
+            <div class="result-row-header">
+              <span class="result-label">5歳児日本語の英訳</span>
+              <button class="speak-btn" id="speak-d" title="読み上げる">🔊</button>
+            </div>
+            <p id="model-d"></p>
+          </div>
+          <div class="result-row">
+            <div class="result-row-header">
+              <span class="result-label">ビジネス英語</span>
+              <button class="speak-btn" id="speak-c" title="読み上げる">🔊</button>
+            </div>
+            <p id="model-c"></p>
+          </div>
+        </div>
+
+        <div class="result-card feedback">
+          <div class="result-card-title">✏️ あなたへのフィードバック</div>
+          <p id="feedback-text"></p>
+        </div>
+
+        <div class="nav-buttons">
+          <button id="retry-btn">もう一度やり直す</button>
+          <button id="next-btn">次の問題へ →</button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="nav-mini">
+      <button id="prev-btn">← 前へ</button>
+      <button id="next-mini-btn">次へ →</button>
+    </div>
+
+  </main>
+
+  <script src="data/toeic700.js?v=20260415"></script>
+  <script src="data/toeic300.js?v=20260415"></script>
+  <script src="data/toeic500.js?v=20260415"></script>
+  <script src="data/toeic900.js?v=20260415"></script>
+  <script src="app.js?v=20260415n"></script>
+</body>
+</html>
